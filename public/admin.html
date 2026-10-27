@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dum &amp; Co. – Admin</title>
+<style>
+:root{--ink:#1c2140;--saffron:#e3a008;--chili:#b8321e;--paper:#f7f7f5;--mist:#e6e8ef;--muted:#5d6280}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,'Segoe UI',sans-serif;background:var(--paper);color:var(--ink)}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+header{background:var(--ink);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+main{max-width:1100px;margin:auto;padding:20px}
+.tabs{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px}
+button,.tab{font:600 .9rem inherit;font-family:inherit;border:2px solid var(--ink);background:#fff;color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.tab.on,.pri{background:var(--ink);color:#fff}
+.danger{border-color:var(--chili);color:var(--chili)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{background:#fff;padding:16px;border-radius:8px;border-top:4px solid var(--saffron)}.stat b{font-size:1.8rem;display:block}
+.card{background:#fff;border-radius:8px;padding:14px;margin-bottom:10px;display:grid;gap:6px}
+.top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}
+small{color:var(--muted)}
+input,select{font:inherit;padding:8px;border:2px solid var(--mist);border-radius:8px;max-width:100%}
+.login{max-width:340px;margin:80px auto;display:grid;gap:12px;padding:20px}
+.add{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:14px}
+</style>
+</head>
+<body>
+<header><b>Dum &amp; Co. · Admin</b><button id="logout" hidden>Log out</button></header>
+<main id="app"></main>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '₹' + (n || 0).toLocaleString('en-IN');
+const when = d => new Date(d).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+let token = sessionStorage.getItem('adm'), tab = 'overview';
+
+async function api(url, method = 'GET', body) {
+  const r = await fetch('/api/admin/' + url, { method, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: body && JSON.stringify(body) });
+  const d = await r.json();
+  if (r.status === 401 && url !== 'login') { logout(); throw new Error(d.error); }
+  if (!r.ok) throw new Error(d.error || 'Request failed'); return d;
+}
+function logout() { sessionStorage.removeItem('adm'); token = null; show(); }
+$('#logout').onclick = logout;
+
+function show() {
+  $('#logout').hidden = !token;
+  if (!token) {
+    $('#app').innerHTML = `<form class="login" id="lf"><h2>Staff login</h2><input type="password" id="pw" placeholder="Password" required autofocus><button class="pri">Log in</button><small id="le"></small></form>`;
+    $('#lf').onsubmit = async e => { e.preventDefault();
+      try { token = (await api('login', 'POST', { password: $('#pw').value })).token; sessionStorage.setItem('adm', token); show(); }
+      catch (err) { $('#le').textContent = err.message; } };
+    return;
+  }
+  const names = { overview: 'Overview', orders: 'Orders', bookings: 'Bookings', menu: 'Menu', feedback: 'Feedback' };
+  $('#app').innerHTML = `<div class="tabs">${Object.entries(names).map(([k, v]) => `<button class="tab ${k === tab ? 'on' : ''}" data-t="${k}">${v}</button>`).join('')}</div><div id="view">Loading…</div>`;
+  $('.tabs').onclick = e => { if (e.target.dataset.t) { tab = e.target.dataset.t; show(); } };
+  views[tab]().catch(err => $('#view').textContent = err.message);
+}
+const opts = (list, cur) => list.map(o => `<option ${o === cur ? 'selected' : ''}>${o}</option>`).join('');
+
+const views = {
+  async overview() {
+    const s = await api('stats');
+    $('#view').innerHTML = `<div class="stats">
+      <div class="stat"><b>${s.orders}</b>Total orders</div><div class="stat"><b>${money(s.revenue)}</b>Revenue</div>
+      <div class="stat"><b>${s.pendingBookings}</b>Pending bookings</div><div class="stat"><b>${s.avgRating || '–'}</b>Avg rating (${s.reviews})</div></div>`;
+  },
+  async orders() {
+    const list = await api('orders');
+    $('#view').innerHTML = list.map(o => `<div class="card"><div class="top"><b>#${o._id.slice(-6)} · ${esc(o.customer.name)} · ${esc(o.type)}</b>
+      <select data-o="${o._id}">${opts(['new','preparing','ready','delivered','cancelled'], o.status)}</select></div>
+      <div>${o.items.map(i => `${esc(i.name)} × ${i.qty}`).join(', ')}</div>
+      <small>${esc(o.customer.phone)} ${o.customer.address ? '· ' + esc(o.customer.address) : ''} ${o.customer.note ? '· Note: ' + esc(o.customer.note) : ''}</small>
+      <div><b>${money(o.total)}</b> <small>${when(o.createdAt)}</small></div></div>`).join('') || '<p>No orders yet.</p>';
+    $('#view').onchange = e => e.target.dataset.o && api('orders/' + e.target.dataset.o, 'PATCH', { status: e.target.value });
+  },
+  async bookings() {
+    const list = await api('bookings');
+    $('#view').innerHTML = list.map(b => `<div class="card"><div class="top"><b>${esc(b.name)} · ${b.guests} guests</b>
+      <select data-b="${b._id}">${opts(['pending','confirmed','cancelled'], b.status)}</select></div>
+      <div>${esc(b.date)} at ${esc(b.time)}</div><small>${esc(b.phone)} ${b.note ? '· ' + esc(b.note) : ''}</small></div>`).join('') || '<p>No bookings yet.</p>';
+    $('#view').onchange = e => e.target.dataset.b && api('bookings/' + e.target.dataset.b, 'PATCH', { status: e.target.value });
+  },
+  async menu() {
+    const list = await api('menu');
+    $('#view').innerHTML = `<form class="add" id="mf"><input name="name" placeholder="Dish name" required><input name="category" placeholder="Category" required>
+      <input name="price" type="number" min="0" placeholder="Price (₹)" required><input name="description" placeholder="Description"><button class="pri">Add dish</button></form>` +
+      list.map(m => `<div class="card"><div class="top"><b>${esc(m.name)} <small>${esc(m.category)} · ${money(m.price)}</small></b>
+      <span><button data-tog="${m._id}" data-av="${m.available}">${m.available ? 'Mark sold out' : 'Mark available'}</button> <button class="danger" data-del="${m._id}">Delete</button></span></div>
+      <small>${esc(m.description)}</small></div>`).join('');
+    $('#mf').onsubmit = async e => { e.preventDefault(); const d = Object.fromEntries(new FormData(e.target)); d.price = +d.price;
+      try { await api('menu', 'POST', d); views.menu(); } catch (err) { alert(err.message); } };
+    $('#view').onclick = async e => {
+      if (e.target.dataset.tog) { await api('menu/' + e.target.dataset.tog, 'PATCH', { available: e.target.dataset.av !== 'true' }); views.menu(); }
+      if (e.target.dataset.del && confirm('Delete this dish?')) { await api('menu/' + e.target.dataset.del, 'DELETE'); views.menu(); } };
+  },
+  async feedback() {
+    const list = await api('feedback');
+    $('#view').innerHTML = list.map(f => `<div class="card"><div class="top"><b>${'★'.repeat(f.rating)}${'☆'.repeat(5 - f.rating)} ${esc(f.name)}</b>
+      <button class="danger" data-f="${f._id}">Delete</button></div><div>${esc(f.comment)}</div><small>${when(f.createdAt)}</small></div>`).join('') || '<p>No feedback yet.</p>';
+    $('#view').onclick = async e => { if (e.target.dataset.f && confirm('Delete this review?')) { await api('feedback/' + e.target.dataset.f, 'DELETE'); views.feedback(); } };
+  }
+};
+show();
+</script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dum &amp; Co. – Biryani, booked and delivered</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2b0f0a;--saffron:#f2a20c;--chili:#c4260f;--maroon:#6e1414;--cardamom:#3f6b3a;--paper:#fcf4e2;--mist:#f2e1c0;--white:#fffdf8;--muted:#7a5a48;--serif:'Playfair Display',Georgia,serif}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Bricolage Grotesque',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;padding-bottom:84px}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--saffron);outline-offset:2px}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;background:var(--maroon);color:#fff3d6;position:sticky;top:0;z-index:20;border-bottom:4px solid var(--saffron)}
+header b{font-family:var(--serif);font-size:1.4rem;font-weight:800;letter-spacing:.01em}
+.zari{height:14px;background:repeating-linear-gradient(90deg,var(--saffron) 0 10px,var(--maroon) 10px 12px,var(--chili) 12px 22px,var(--maroon) 22px 24px)}
+nav a{text-decoration:none;margin-left:16px;font-size:.95rem}
+.hero{
+  background:
+    linear-gradient(rgba(70, 12, 6, 0.35), rgba(20, 5, 3, 0.65)),
+    url('/dumco-hero.png') center / cover no-repeat;
+  min-height:600px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  padding:56px 20px 72px;
+}
+.hero-content{width:min(100%,1000px)}
+.hero .eyebrow{display:inline-block;margin:0 0 14px;color:var(--saffron);font-weight:600;letter-spacing:.22em;text-transform:uppercase;font-size:.8rem}
+.hero h1{font-family:var(--serif);font-size:clamp(2.8rem,10vw,6rem);line-height:1;margin:0 0 20px;font-weight:800;max-width:12ch;text-shadow:0 3px 18px rgba(0,0,0,.45)}
+.hero h1 em{color:var(--saffron);font-style:italic}
+.hero p{max-width:46ch;color:#fbe6c2;margin:0 0 28px;font-size:1.1rem}
+.btn{display:inline-block;border:0;border-radius:8px;padding:12px 22px;font:600 1rem inherit;font-family:inherit;cursor:pointer;text-decoration:none;background:var(--saffron);color:var(--ink);box-shadow:0 3px 0 #a8700a;transition:transform .15s,background .15s}
+.btn:hover{background:#ffb81f;transform:translateY(-1px)}
+.btn.alt{background:transparent;color:inherit;border:2px solid currentColor;margin-left:8px}
+.btn.dark{background:var(--chili);color:#fff;box-shadow:0 3px 0 #7d1507}.btn.dark:hover{background:#d9301a}
+section{padding:48px 20px;max-width:1000px;margin:auto}
+h2{font-family:var(--serif);font-size:2.2rem;margin:0 0 24px;color:var(--maroon);display:flex;align-items:center;gap:14px}
+h2::after{content:'';flex:1;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--saffron),var(--chili) 40%,transparent)}
+
+/* Highlights */
+.feats{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.feat{position:relative;border-radius:14px;overflow:hidden;min-height:200px;color:#fff;display:flex;align-items:flex-end;padding:18px;isolation:isolate}
+.feat::before{content:"";position:absolute;inset:0;z-index:-2;background:var(--g)}
+.feat::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(transparent 35%,rgba(10,8,20,.75))}
+.feat .em{position:absolute;top:10px;right:14px;font-size:5.5rem;line-height:1;opacity:.95;filter:drop-shadow(0 6px 10px rgba(0,0,0,.3));z-index:-1}
+.feat h3{margin:0 0 2px;font-family:var(--serif);font-size:1.35rem}.feat p{margin:0;font-size:.9rem;color:#f0f0f6}
+
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px}
+.chip{border:2px solid var(--maroon);color:var(--maroon);background:none;border-radius:99px;padding:6px 16px;font:600 .9rem inherit;font-family:inherit;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--maroon);color:#fff3d6}
+.menu{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.dish{background:var(--white);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;border-bottom:4px solid var(--chili);box-shadow:0 2px 10px rgba(80,20,10,.12);transition:transform .2s,box-shadow .2s}
+.dish:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(110,20,20,.22)}
+.thumb{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.tile{display:flex;align-items:center;justify-content:center;font-size:4.2rem;position:relative}
+.tile::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.28),transparent 60%)}
+.tile span{filter:drop-shadow(0 6px 8px rgba(0,0,0,.3));position:relative;z-index:1}
+.dish .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.dish h3{margin:0;font-family:var(--serif);font-size:1.15rem;display:flex;align-items:center;gap:8px}
+.vd{flex:none;width:16px;height:16px;border:2px solid;border-radius:3px;display:inline-grid;place-items:center}.vd::after{content:'';width:8px;height:8px;border-radius:50%;background:currentColor}.vd.v{color:#1f8a3b}.vd.n{color:#b3261e}
+.heat{position:absolute;top:10px;left:10px;z-index:2;background:rgba(43,15,10,.82);color:#fff;border-radius:99px;padding:3px 10px;font-size:.78rem;font-weight:600;letter-spacing:.02em}
+.pic{position:relative}.dish p{margin:0;color:var(--muted);font-size:.9rem;flex:1}
+.dish .row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.price{font-weight:800;font-size:1.2rem;color:var(--chili)}
+.dish button{padding:8px 16px}
+
+/* Booking with image */
+.book-wrap{display:grid;gap:28px;grid-template-columns:1fr 1fr;align-items:center}
+.book-art{border-radius:16px;min-height:340px;display:flex;align-items:center;justify-content:center;font-size:7rem;text-align:center;color:#fff;background:radial-gradient(circle at 30% 25%,#f2a20c,#c4260f 55%,#4a0c14);position:relative;overflow:hidden}
+.book-art small{position:absolute;bottom:18px;left:0;right:0;font-size:1rem;font-weight:600;letter-spacing:.04em}
+.book-art .em{filter:drop-shadow(0 10px 14px rgba(0,0,0,.35))}
+
+form{display:grid;gap:12px;max-width:520px}
+label{display:grid;gap:4px;font-weight:600;font-size:.9rem}
+input,select,textarea{font:inherit;padding:11px;border:2px solid #e3c995;border-radius:8px;background:var(--white);color:var(--ink);width:100%}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.band{background:var(--mist);max-width:none}.band>div{max-width:1000px;margin:auto}
+.stars{display:flex;gap:4px}.stars button{background:none;border:0;font-size:2rem;cursor:pointer;color:#b9bdd0;padding:0}.stars button.on{color:var(--saffron)}
+.reviews{display:grid;gap:12px;margin-top:28px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.rev{background:var(--white);padding:14px;border-radius:6px;border-top:3px solid var(--saffron)}.rev .s{color:var(--saffron)}
+.bar{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(90deg,var(--chili),var(--maroon));color:var(--white);padding:14px 20px;display:none;justify-content:space-between;align-items:center;z-index:30;border:0;font:600 1rem inherit;font-family:inherit;width:100%;cursor:pointer}
+.bar.show{display:flex}
+.drawer{position:fixed;inset:0;background:rgba(43,15,10,.65);display:none;z-index:40;justify-content:flex-end}
+.drawer.open{display:flex}
+.panel{background:var(--paper);width:min(440px,100%);height:100%;overflow:auto;padding:20px}
+.line{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #e3c995}
+.line .lt{display:flex;align-items:center;gap:10px}
+.line .lt .mini{width:44px;height:44px;border-radius:8px;object-fit:cover;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex:none}
+.qty button{width:30px;height:30px;border-radius:50%;border:2px solid var(--maroon);color:var(--maroon);background:none;font-weight:800;cursor:pointer}
+.toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--white);padding:12px 20px;border-radius:8px;z-index:60;display:none;max-width:90%}
+.toast.err{background:var(--chili)}
+footer{padding:28px 20px;text-align:center;color:#f3d9a8;background:var(--maroon);margin-top:20px}footer a{color:var(--saffron)}
+@media(max-width:720px){.book-wrap{grid-template-columns:1fr}.book-art{min-height:200px;font-size:5rem}}
+@media(max-width:520px){.two{grid-template-columns:1fr}nav a{margin-left:10px;font-size:.85rem}.btn.alt{margin:10px 0 0}}
+@media(prefers-reduced-motion:no-preference){.hero h1{animation:rise .7s ease-out}@keyframes rise{from{opacity:0;transform:translateY(16px)}}}
+@media(prefers-reduced-motion:reduce){.dish{transition:none}.dish:hover{transform:none}}
+</style>
+</head>
+<body>
+<header><b>Dum &amp; Co.</b><nav><a href="#menu">Menu</a><a href="#book">Book a table</a><a href="#feedback">Reviews</a></nav></header>
+<div class="zari" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<div class="hero">
+  <div class="hero-content">
+    <span class="eyebrow">Hyderabadi · Dum Pukht · Nawabi kitchen</span>
+    <h1>Sealed pot. <em>Slow fire.</em></h1>
+    <p>Hyderabadi dum biryani, cooked the way it should be: dough-sealed and left to steam. Order for delivery or pickup, or reserve a table.</p>
+    <a class="btn" href="#menu">Order food</a><a class="btn alt" href="#book">Book a table</a>
+  </div>
+</div>
+
+<section id="why">
+  <div class="feats">
+    <div class="feat" style="--g:linear-gradient(135deg,#f2a20c,#c4260f)"><span class="em" aria-hidden="true">🍛</span><div><h3>Dum pukht</h3><p>Pots sealed with dough so every aroma stays in.</p></div></div>
+    <div class="feat" style="--g:linear-gradient(135deg,#c4260f,#4a0c14)"><span class="em" aria-hidden="true">🔥</span><div><h3>Slow fire</h3><p>Hours on gentle heat. Rushed biryani is just rice.</p></div></div>
+    <div class="feat" style="--g:linear-gradient(135deg,#4d7c3a,#1f2f17)"><span class="em" aria-hidden="true">🌶️</span><div><h3>Real masala</h3><p>Saffron, cardamom, mace and fiery red chilli, ground fresh.</p></div></div>
+  </div>
+</section>
+
+<section id="menu">
+  <h2>Menu</h2>
+  <div class="chips" id="chips"></div>
+  <div class="menu" id="menu-list"><p>Loading menu…</p></div>
+</section>
+
+<section class="band" id="book"><div>
+  <h2>Book a table</h2>
+  <div class="book-wrap">
+    <form id="book-form">
+      <div class="two"><label>Name<input name="name" required maxlength="80" autocomplete="name"></label>
+      <label>Phone<input name="phone" type="tel" required autocomplete="tel"></label></div>
+      <div class="two"><label>Date<input name="date" type="date" required></label>
+      <label>Time<input name="time" type="time" required min="11:00" max="23:00"></label></div>
+      <label>Guests<input name="guests" type="number" min="1" max="20" value="2" required></label>
+      <label>Special request (optional)<textarea name="note" rows="2" maxlength="300"></textarea></label>
+      <button class="btn dark" type="submit">Request booking</button>
+    </form>
+    <div class="book-art" aria-hidden="true"><span class="em">🍛</span><small>Pull up a chair. The dum is almost ready.</small></div>
+  </div>
+</div></section>
+
+<section id="feedback">
+  <h2>Tell us how we did</h2>
+  <form id="fb-form">
+    <label>Rating<span class="stars" id="stars"></span></label>
+    <label>Your name (optional)<input name="name" maxlength="80"></label>
+    <label>Comments<textarea name="comment" rows="3" maxlength="600"></textarea></label>
+    <button class="btn dark" type="submit">Send feedback</button>
+  </form>
+  <div class="reviews" id="reviews"></div>
+</section>
+<div class="zari" aria-hidden="true"></div>
+<footer>Dum &amp; Co. · Made with dum, desi ghee and patience · <a href="/admin.html">Staff login</a></footer>
+
+<button class="bar" id="bar"><span id="bar-count"></span><span id="bar-total"></span></button>
+<div class="drawer" id="drawer"><div class="panel">
+  <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Your order</h2><button class="chip" id="close">Close</button></div>
+  <div id="lines"></div>
+  <p class="price" style="text-align:right">Total: <span id="total"></span></p>
+  <form id="order-form">
+    <label>Order type<select name="type" id="otype"><option value="delivery">Delivery</option><option value="pickup">Pickup</option></select></label>
+    <label>Name<input name="name" required maxlength="80" autocomplete="name"></label>
+    <label>Phone<input name="phone" type="tel" required autocomplete="tel"></label>
+    <label id="addr">Delivery address<textarea name="address" rows="2" maxlength="300"></textarea></label>
+    <label>Note for the kitchen (optional)<input name="note" maxlength="300"></label>
+    <button class="btn dark" type="submit">Place order</button>
+  </form>
+</div></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => '₹' + n.toLocaleString('en-IN');
+const cart = {}; let menu = [], cat = 'All', rating = 0;
+
+/* Food visuals: uses the dish photo (m.image) when the API provides one,
+   otherwise a warm gradient tile with a matching food emoji. */
+const ICONS = [
+  [/biryani|dum|pulao|rice/i,'🍛'],[/kebab|tikka|seekh|grill|tandoor/i,'🍢'],
+  [/chicken|wing|65|fry|starter/i,'🍗'],[/mutton|lamb|curry|gravy|korma|salan|haleem/i,'🍲'],
+  [/naan|roti|bread|paratha|kulcha/i,'🫓'],[/raita|salad/i,'🥗'],[/egg/i,'🥚'],[/paneer|veg/i,'🧆'],
+  [/dessert|sweet|khubani|double|gulab|kheer|phirni|ice/i,'🍮'],[/drink|lassi|chai|tea|soda|juice|beverage|falooda/i,'🥤']
+];
+const GRADS = ['#f2a20c,#c4260f','#c4260f,#4a0c14','#4d7c3a,#1f2f17','#e8741a,#9e1b1b','#a3262f,#3b0a14','#d99a14,#7a3b0c'];
+const emojiFor = m => (ICONS.find(([re]) => re.test(m.name + ' ' + m.category)) || [0,'🍽️'])[1];
+const gradFor = m => { let h = 0; for (const c of String(m.category || m.name)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return `linear-gradient(135deg,${GRADS[h % GRADS.length]})`; };
+const isVeg = m => typeof m.veg === 'boolean' ? m.veg : !/chicken|mutton|lamb|egg|fish|prawn|beef|keema|kebab|haleem|gosht|meat|65/i.test(m.name + ' ' + m.description) && /veg|paneer|dal|raita|mirchi|baingan|salad|bread|naan|roti|dessert|sweet|khubani|double|gulab|kheer|drink|lassi|chai|soda|juice/i.test(m.name + ' ' + m.category);
+const heatOf = m => Number.isInteger(m.spice) ? m.spice : (/extra hot|fiery|\bhot\b|spicy|mirchi|chilli|chili|65|andhra|haleem|salan/i.test(m.name + ' ' + m.description) ? 3 : /masala|tikka|kebab|tandoor|biryani|curry|korma/i.test(m.name + ' ' + m.category) ? 2 : 0);
+const heatHTML = m => { const h = Math.min(3, heatOf(m)); return h ? `<span class="heat" title="Spice level ${h} of 3">${'🌶️'.repeat(h)}</span>` : ''; };
+const imgOf = m => m.image || m.img || m.imageUrl || m.photo || '';
+const tileHTML = m => `<div class="thumb tile" style="background:${gradFor(m)}" aria-hidden="true"><span>${emojiFor(m)}</span></div>`;
+const thumbHTML = m => imgOf(m)
+  ? `<img class="thumb" src="${esc(imgOf(m))}" alt="${esc(m.name)}" loading="lazy" data-fb="${m._id}">`
+  : tileHTML(m);
+document.addEventListener('error', e => {
+  const i = e.target; if (i.tagName !== 'IMG' || !i.dataset.fb) return;
+  const m = menu.find(x => x._id === i.dataset.fb); if (!m) return;
+  i.outerHTML = tileHTML(m);
+}, true);
+
+function toast(msg, err) {
+  const t = $('#toast'); t.textContent = msg; t.className = 'toast' + (err ? ' err' : ''); t.style.display = 'block';
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = 'none', 3500);
+}
+async function api(url, method = 'GET', body) {
+  const r = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: body && JSON.stringify(body) });
+  const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Something went wrong'); return d;
+}
+
+/* Menu */
+function renderMenu() {
+  const cats = ['All', ...new Set(menu.map(m => m.category))];
+  $('#chips').innerHTML = cats.map(c => `<button class="chip ${c === cat ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('');
+  $('#menu-list').innerHTML = menu.filter(m => cat === 'All' || m.category === cat).map(m => `
+    <article class="dish"><div class="pic">${thumbHTML(m)}${heatHTML(m)}</div><div class="body"><h3><span class="vd ${isVeg(m) ? 'v' : 'n'}" role="img" aria-label="${isVeg(m) ? 'Vegetarian' : 'Non-vegetarian'}"></span>${esc(m.name)}</h3><p>${esc(m.description)}</p>
+    <div class="row"><span class="price">${money(m.price)}</span><button class="btn" data-add="${m._id}">Add</button></div></div></article>`).join('') || '<p>No dishes available right now.</p>';
+}
+$('#chips').onclick = e => { if (e.target.dataset.c) { cat = e.target.dataset.c; renderMenu(); } };
+$('#menu-list').onclick = e => { if (e.target.dataset.add) { cart[e.target.dataset.add] = (cart[e.target.dataset.add] || 0) + 1; renderCart(); } };
+
+/* Cart */
+function renderCart() {
+  const ids = Object.keys(cart).filter(id => cart[id] > 0);
+  const total = ids.reduce((s, id) => s + cart[id] * menu.find(m => m._id === id).price, 0);
+  const count = ids.reduce((s, id) => s + cart[id], 0);
+  $('#bar').classList.toggle('show', count > 0);
+  $('#bar-count').textContent = `View order · ${count} item${count > 1 ? 's' : ''}`;
+  $('#bar-total').textContent = money(total); $('#total').textContent = money(total);
+  $('#lines').innerHTML = ids.map(id => { const m = menu.find(x => x._id === id);
+    const mini = imgOf(m) ? `<img class="mini" src="${esc(imgOf(m))}" alt="">` : `<span class="mini" style="background:${gradFor(m)}" aria-hidden="true">${emojiFor(m)}</span>`;
+    return `
+    <div class="line"><span class="lt">${mini}<span>${esc(m.name)}<br><small>${money(m.price)}</small></span></span>
+    <span class="qty"><button data-d="-1" data-id="${id}" aria-label="Remove one">−</button> ${cart[id]} <button data-d="1" data-id="${id}" aria-label="Add one">+</button></span></div>`; }).join('') || '<p>Your cart is empty. Add something from the menu.</p>';
+  if (!count) $('#drawer').classList.remove('open');
+}
+$('#lines').onclick = e => { const id = e.target.dataset.id; if (id) { cart[id] += +e.target.dataset.d; renderCart(); } };
+$('#bar').onclick = () => $('#drawer').classList.add('open');
+$('#close').onclick = () => $('#drawer').classList.remove('open');
+$('#drawer').onclick = e => { if (e.target.id === 'drawer') e.target.classList.remove('open'); };
+$('#otype').onchange = e => { $('#addr').style.display = e.target.value === 'pickup' ? 'none' : 'grid'; };
+
+$('#order-form').onsubmit = async e => {
+  e.preventDefault(); const f = Object.fromEntries(new FormData(e.target));
+  const items = Object.keys(cart).filter(id => cart[id] > 0).map(id => ({ id, qty: cart[id] }));
+  try {
+    const r = await api('/api/orders', 'POST', { type: f.type, items, customer: f });
+    Object.keys(cart).forEach(k => delete cart[k]); renderCart(); e.target.reset();
+    toast(`Order placed! Total ${money(r.total)}. Order ID ${r.id.slice(-6)}`);
+  } catch (err) { toast(err.message, true); }
+};
+
+/* Booking */
+$('#book-form [name=date]').min = new Date().toISOString().split('T')[0];
+$('#book-form').onsubmit = async e => {
+  e.preventDefault();
+  try { await api('/api/bookings', 'POST', Object.fromEntries(new FormData(e.target))); e.target.reset(); toast('Booking requested. We will confirm by phone.'); }
+  catch (err) { toast(err.message, true); }
+};
+
+/* Feedback */
+function renderStars() {
+  $('#stars').innerHTML = [1,2,3,4,5].map(n => `<button type="button" class="${n <= rating ? 'on' : ''}" data-n="${n}" aria-label="${n} star${n > 1 ? 's' : ''}">★</button>`).join('');
+}
+$('#stars').onclick = e => { if (e.target.dataset.n) { rating = +e.target.dataset.n; renderStars(); } };
+$('#fb-form').onsubmit = async e => {
+  e.preventDefault(); if (!rating) return toast('Choose a star rating first.', true);
+  try { await api('/api/feedback', 'POST', { ...Object.fromEntries(new FormData(e.target)), rating });
+    e.target.reset(); rating = 0; renderStars(); toast('Thank you for your feedback!'); loadReviews(); }
+  catch (err) { toast(err.message, true); }
+};
+async function loadReviews() {
+  const list = await api('/api/feedback');
+  $('#reviews').innerHTML = list.map(r => `<div class="rev"><div class="s">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+    <p>${esc(r.comment)}</p><small>${esc(r.name)}</small></div>`).join('');
+}
+
+renderStars();
+api('/api/menu').then(m => { menu = m; renderMenu(); renderCart(); }).catch(() => $('#menu-list').innerHTML = '<p>Could not load the menu. Please refresh.</p>');
+loadReviews();
+</script>
+</body>
+</html>
